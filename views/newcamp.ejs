@@ -2,31 +2,47 @@
     <div class="row">
         <h1 class="text-center"> New Place </h1>
         <div class="col-6 offset-3">
-            <form action="/campgrounds" method="POST">
+            <form action="/campgrounds" method="POST" class="form_to_be_validated" novalidate>
                 <div class="mb-3">
                     <label class="form-label" for="title">Enter the Title:</label>
-                    <input class="form-control" type="text" name="title">
+                    <input class="form-control" type="text" name="campground[title]" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="price">Enter the Price:</label>
                     <div class="input-group">
                         <span class="input-group-text">INR</span>
-                        <input type="text" class="form-control" name="price">
+                        <input type="text" class="form-control" name="campground[price]" required>
+                        <div class="invalid-feedback">
+                            Please enter a valid price.
+                        </div>
                     </div>
+
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="description">Enter the Description :</label>
 
-                    <textarea class="form-control" id="description" name="description" rows="5"
-                        placeholder="Enter description here..."></textarea>
+                    <textarea class="form-control" id="description" name="campground[description]" rows="5"
+                        placeholder="Enter description here..." required></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="location">Enter the Location:</label>
-                    <input class="form-control" type="text" name="location">
+                    <input class="form-control" type="text" name="campground[location]" required>
+                    <div class="invalid-feedback">
+                        Please enter a valid location.
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="image">Enter the image link:</label>
-                    <input class="form-control" type="text" name="image">
+                    <input class="form-control" type="text" name="campground[image]" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <button class="btn btn-success" type="submit">Submit</button>
 

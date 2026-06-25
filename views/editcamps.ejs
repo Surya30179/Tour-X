@@ -3,31 +3,34 @@
     <div class="row">
         <h1 class="text-center">Edit the Place</h1>
         <div class="col-6 offset-3">
-            <form action="/campgrounds/<%= camp._id%>?_method=PUT" method="POST">
+            <form action="/campgrounds/<%= camp._id%>?_method=PUT" method="POST" class="form_to_be_validated"
+                novalidate>
                 <div class="mb-3">
                     <label class="form-label" for="title">Edit the Title</label>
-                    <input class="form-control" type="text" name="title" value="<%=camp.title %>">
+                    <input class="form-control" type="text" name="campground[title]" value="<%=camp.title %>" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="price">Enter the Price:</label>
                     <div class="input-group">
                         <span class="input-group-text">INR</span>
-                        <input type="text" class="form-control" name="price" value="<%= camp.price %>">
+                        <input type="text" class="form-control" name="campground[price]" value="<%= camp.price %>"
+                            required>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="description">Edit the Description :</label>
 
-                    <textarea class="form-control" id="description" name="description"
+                    <textarea class="form-control" id="description" name="campground[description]" required
                         rows="5"><%= camp.description %></textarea>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="location">Edit the Location</label>
-                    <input class="form-control" type="text" name="location" value="<%= camp.location %>">
+                    <input class="form-control" type="text" name="campground[location]" value="<%= camp.location %>"
+                        required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="image">Edit the image</label>
-                    <input class="form-control" type="text" name="image" value="<%=camp.image %>">
+                    <input class="form-control" type="text" name="campground[image]" value="<%=camp.image %>" required>
                 </div>
                 <button class="btn btn-info" type="submit">Update</button>
             </form>
