@@ -1,20 +1,5 @@
 <% layout('./layouts/boilerplate')%>
-    <!-- <h1>
-        <%= camp.title %>
-    </h1>
-    <h2>Entry:<%= camp.price %>
-    </h2>
-    <p>Description:<%= camp.description %>
-    </p>
-    <p>Location:<%= camp.location %>
-    </p>
-    <img src="<%= camp.image %>" class="img-fluid" alt="">
-    <form action="/campgrounds/<%=camp._id%>?_method=DELETE" method="POST">
-        <button type="submit">DELETE</button>
-    </form>
-    <form action="/campgrounds/<%=camp._id%>/edit" method="GET">
-        <button type="submit">UPDATE</button>
-    </form> -->
+
 
     <div class="row mb-5">
         <div class="col-6 offset-3">
@@ -51,8 +36,45 @@
 
 
                     </div>
+                    <h3 class="mt-3">Add a Review</h3>
+                    <form action="/campgrounds/<%=camp._id%>/review" method="POST" class="form_to_be_validated"
+                        novalidate>
+
+                        <div class="mb-3 mt-3">
+                            <label for="rating" class="form-label">Rate the Place</label>
+                            <input type="range" class="form-range" min="1" max="5" name="review[rating]">
+                        </div>
+                        <div class="mb-3">
+                            <label for="body" class="form-label">Review</label>
+                            <textarea name="review[body]" id="body" cols="30" rows="3" class="form-control" required
+                                placeholder="Enter a Review"></textarea>
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                        <button class="btn btn-success submit">Submit</button>
+                    </form>
 
                 </div>
             </div>
+            <h3 class="ms-1">Reviews</h3>
+            <% camp.reviews.forEach(element=> { %>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3 offset-1">
+                                <p>
+                                    <%= element.body %>
+                                </p>
+                            </div>
+                            <div class="col-3 offset-1">
+                                <p>
+                                    Rating: <%= element.rating %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
         </div>
     </div>

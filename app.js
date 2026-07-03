@@ -6,8 +6,8 @@ const methodOverride = require('method-override');
 const ejsmate=require('ejs-mate');
 const async_error_handler=require('./utils/WrapAsync');
 const express_error=require('./utils/express_error');
-const joi=require('joi');
-
+const Review=require('./models/reviews')
+const {campgroundschema,reviewSchema}=require('./schema');
 
 
 
@@ -32,7 +32,24 @@ const connectdb=async ()=>{
 
 connectdb();
 
+const validateCampGround=(req,res,next)=>{
+   
+    const result= campgroundschema.validate(req.body);
+    if (result.error){
+        const message=result.error.details.map(el=>el.message).join(",");
+        throw new express_error(message,400);
+    }
+    next()
+}
+const validateReview=(req,res,next)=>{
+    const result=reviewSchema.validate(req.body);
+     if (result.error){
+        const message=result.error.details.map(el=>el.message).join(",");
+        throw new express_error(message,400);
+    }
+    next()
 
+}
 
 
 app.get("/",(req,res,)=>{
@@ -44,30 +61,29 @@ app.get("/campgrounds",async_error_handler(async (req,res,next)=>{
 }))
 app.get("/campgrounds/new" ,async_error_handler(async (req,res,next)=>{
     res.render("newcamp.ejs");
-}))     
+}))
+app.post("/campgrounds/:id/review",validateReview,async_error_handler(async (req,res,next)=>{
+    const {id}=req.params;
+    const {review}=req.body;
+    const campground=await CampGround.findById(id);
+    const newreview=new Review(review);
+    campground.reviews.push(newreview._id);
+    await newreview.save();
+    await campground.save();
+    res.redirect("/campgrounds")
+    
 
-app.put("/campgrounds/:id",async_error_handler(async (req,res,next)=>{
+}))
+
+app.put("/campgrounds/:id",validateCampGround,async_error_handler(async (req,res,next)=>{
     const {id}=req.params;
     await CampGround.findByIdAndUpdate(id,req.body.campground,{
     runValidators: true,
     new: true});
     res.redirect(`/campgrounds/${id}`)
 }))
-app.post("/campgrounds",async_error_handler(async (req,res,next)=>{
-    const campgroundschema=joi.object({
-        campground:joi.object({
-            title:joi.string().required(),
-            price:joi.number().required(),
-            description:joi.string().required(),
-            location:joi.string().required(),
-            image:joi.string().required()
-        }).required()
-    });
-    const result= campgroundschema.validate(req.body);
-    if (result.error){
-        const message=result.error.details.map(el=>el.message).join(",")
-        throw new express_error(message,500);
-    }
+app.post("/campgrounds",validateCampGround,async_error_handler(async (req,res,next)=>{
+   
     const newcamp=req.body.campground;
     const newplace=new CampGround(newcamp);
     await newplace.save();
@@ -75,7 +91,7 @@ app.post("/campgrounds",async_error_handler(async (req,res,next)=>{
 }))
 app.get("/campgrounds/:id",async_error_handler(async (req,res,next)=>{
     const {id}=req.params;
-    const camp=await CampGround.findById(id);
+    const camp=await CampGround.findById(id).populate("reviews");
     res.render("singlecamp.ejs",{camp});
 })) 
 app.delete("/campgrounds/:id", async_error_handler(async (req,res,next)=>{
